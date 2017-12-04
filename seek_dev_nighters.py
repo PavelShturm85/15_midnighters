@@ -5,9 +5,9 @@ from datetime import datetime
 
 def load_attempts():
     for page in range(1, 11):
-        url = 'https://devman.org/api/challenges/solution_attempts/?page={}' \
-            .format(page)
-        solutions_attempts = requests.get(url).json()
+        filter_params = dict(page='{}'.format(page))
+        url = 'https://devman.org/api/challenges/solution_attempts'
+        solutions_attempts = requests.get(url, params=filter_params).json()
         for attempt in solutions_attempts['records']:
             yield attempt
 
@@ -23,8 +23,6 @@ def get_midnighters_and_time(attempts):
         if 0 <= int(hours) <= 6:
             yield attempt['username'], datetime.strftime(
                 data_time, "%d.%m.%y %H:%M")
-        else:
-            None
 
 
 if __name__ == '__main__':
