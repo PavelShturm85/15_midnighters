@@ -7,8 +7,8 @@ def load_attempts():
     for page in range(1, 11):
         url = 'https://devman.org/api/challenges/solution_attempts/?page={}' \
             .format(page)
-        solutions_attempts = requests.get(url).json()['records']
-        for attempt in solutions_attempts:
+        solutions_attempts = requests.get(url).json()
+        for attempt in solutions_attempts['records']:
             yield attempt
 
 
