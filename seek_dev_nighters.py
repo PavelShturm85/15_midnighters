@@ -4,13 +4,15 @@ from datetime import datetime
 
 
 def load_attempts():
+    page = 1
     url = 'https://devman.org/api/challenges/solution_attempts'
-    solutions_attempts = requests.get(url).json()
-    number_of_pages = solutions_attempts['number_of_pages'] + 1
-    for page in range(1, number_of_pages):
+    while True:
         filter_params = dict(page=page)
         solutions_attempts = requests.get(url, params=filter_params).json()
+        page += 1
         yield from solutions_attempts['records']
+        if page == solutions_attempts['number_of_pages']:
+            break
 
 
 def get_midnighters_and_time(attempts):
@@ -28,8 +30,7 @@ def get_midnighters_and_time(attempts):
 
 if __name__ == '__main__':
     midnighters = get_midnighters_and_time(load_attempts())
-    midnighters_list = []
-    [midnighters_list.append(midnighter) for midnighter in midnighters]
+    midnighters_list = list(midnighters)
     midnighters_list.sort(key=lambda midnighter: midnighter[0])
     for midnighter in midnighters_list:
         print('Midnighter name: {}, \t time of sending: {}'.format(
